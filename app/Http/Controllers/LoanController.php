@@ -63,43 +63,47 @@ class LoanController extends Controller
             $type = 'error';
             $message = $e->getMessage();
         }
-        return response()->json(['type' => $type, 'message' => $message]);
+        return response()->json(['type' => $type, 'message' => $message], 201);
     }
 
-
+    
     public function index()
     {
         try {
-            $status = true;
             $message = 'Loan applications retrieved successfully!';
             $loans = Loan::with('user')->where('user_id', Auth::user()->id)->get();
             $data = [
-                'status' =>  $status,
                 'message' => $message,
-                'loans' => $loans
+                'loans' => $loans,
             ];
+            if ($loans->isEmpty()) {
+                $data['message'] = 'No loan applications found.';
+            }
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
+            $data['message'] = 'Database error occurred: ' . $e->getMessage();
         } catch (Exception $e) {
             $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
+            $data['message'] = 'An error occurred: ' . $e->getMessage();
         }
-        return response()->json($data);
+        return response()->json($data, 200);
     }
 
-    public function updateStatus(StatusRequest $request, $id)
 
+    public function updateStatus(StatusRequest $request, $id)
     {
         try {
             $post = $request->all();
             $type = 'success';
             $message = "Loan status updated successfully";
+
             DB::beginTransaction();
             $result = Loan::updateApplication($post, $id);
+
             if (!$result) {
-                throw new Exception('Could not save record', 1);
+                throw new Exception('Could not save record', 200);
             }
+
             DB::commit();
         } catch (ValidationException $e) {
             $type = 'error';
@@ -113,6 +117,6 @@ class LoanController extends Controller
             $type = 'error';
             $message = $e->getMessage();
         }
-        return response()->json(['type' => $type, 'message' => $message]);
+        return response()->json(['type' => $type, 'message' => $message], 200);
     }
 }

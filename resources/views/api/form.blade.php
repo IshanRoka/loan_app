@@ -214,6 +214,11 @@
                 var amount = $("#amount").val();
                 var authToken = localStorage.getItem("auth_token");
 
+                if (amount <= 1000) {
+                    showNotification("Loan amount must be greater than 1000.", "error");
+                    return;
+                }
+
                 if (!authToken) {
                     showNotification("You are not logged in. Please log in first.", "error");
                     return;

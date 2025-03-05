@@ -12,6 +12,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/loan/apply', [LoanController::class, 'apply']);
     Route::get('/loans', [LoanController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::middleware('auth:sanctum', 'checkAdmin')->patch('/loan/{id}', [LoanController::class, 'updateStatus']);
 });
-
-Route::middleware('auth:sanctum', 'checkAdmin')->patch('/loan/{id}', [LoanController::class, 'updateStatus']);

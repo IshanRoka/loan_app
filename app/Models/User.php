@@ -17,6 +17,11 @@ class User extends Authenticatable
 {
     use HasApiTokens;
 
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
+
     // public function post()
     // {
     //     return $this->hasMany(NewsEvent::class)->where('status', 'Y');
