@@ -29,6 +29,36 @@ class LoanSeeder extends Seeder
                 'status' => 'pending',
 
             ],
+            [
+                'user_id' => 2,
+                'amount' => 63332,
+                'status' => 'pending',
+
+            ],
+            [
+                'user_id' => 3,
+                'amount' => 23232,
+                'status' => 'pending',
+
+            ],
+            [
+                'user_id' => 2,
+                'amount' => 50200,
+                'status' => 'pending',
+
+            ],
+            [
+                'user_id' => 2,
+                'amount' => 12334,
+                'status' => 'pending',
+
+            ],
+            [
+                'user_id' => 3,
+                'amount' => 76700,
+                'status' => 'pending',
+
+            ],
         ]);
     }
 }
