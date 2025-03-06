@@ -7,6 +7,7 @@
     <title>Apply for Loan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     @include('api.main')
+
     <style>
         body {
             height: 100vh;
@@ -150,19 +151,23 @@
             color: white;
         }
     </style>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
     <div id="notification-container"></div>
+
     <div class="container">
         <form id="loanForm">
             <h3>Apply for Loan</h3>
             <input type="number" name="amount" id="amount" required placeholder="Enter Loan Amount">
             <button type="submit" class="apply">Apply</button>
         </form>
+
         <hr>
+
         <div class="btns">
             <button id="viewLoans">View Loan Application</button>
             <hr>
@@ -187,23 +192,28 @@
     </div>
 
     <script>
-        function showNotification(message, type = 'success') {
+        function showNotification(message, type = 'success', button = null) {
             const notificationContainer = $('#notification-container');
             const notification = $(`
-                <div class="notification ${type}">
-                    <p>${message}</p>
-                    <span class="close-btn">&times;</span>
-                </div>
-            `);
+        <div class="notification ${type}">
+            <p>${message}</p>
+            <span class="close-btn">&times;</span>
+        </div>
+    `);
+
             notificationContainer.append(notification);
+
             notification.find('.close-btn').on('click', function() {
                 notification.fadeOut(300, function() {
                     notification.remove();
+                    if (button) button.prop("disabled", false);
                 });
             });
+
             setTimeout(function() {
                 notification.fadeOut(300, function() {
                     notification.remove();
+                    if (button) button.prop("disabled", false);
                 });
             }, 4000);
         }
@@ -213,16 +223,19 @@
                 e.preventDefault();
                 var amount = $("#amount").val();
                 var authToken = localStorage.getItem("auth_token");
+                var applyButton = $(".apply");
 
                 if (amount <= 1000) {
-                    showNotification("Loan amount must be greater than 1000.", "error");
+                    showNotification("Loan amount must be greater than 1000.", "error", applyButton);
                     return;
                 }
 
                 if (!authToken) {
-                    showNotification("You are not logged in. Please log in first.", "error");
+                    showNotification("You are not logged in. Please log in first.", "error", applyButton);
                     return;
                 }
+
+                applyButton.prop("disabled", true);
 
                 $.ajax({
                     url: "http://127.0.0.1:8000/api/loan/apply",
@@ -239,27 +252,26 @@
                         'Authorization': 'Bearer ' + authToken
                     },
                     success: function(response) {
-                        showNotification(response.message, "success");
+                        showNotification(response.message, "success", applyButton);
                         $("#loanForm")[0].reset();
                     },
                     error: function(xhr) {
-                        let message = "Something went wrong!";
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            message = xhr.responseJSON.message;
-                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
-                            message = Object.values(xhr.responseJSON.error).join("<br>");
-                        }
-                        showNotification(message, "error");
+                        showNotification("Something went wrong!", "error", applyButton);
                     }
                 });
             });
 
             $("#viewLoans").click(function() {
                 var authToken = localStorage.getItem("auth_token");
+                var viewLoansButton = $("#viewLoans");
+
                 if (!authToken) {
-                    showNotification("You are not logged in. Please log in first.", "error");
+                    showNotification("You are not logged in. Please log in first.", "error",
+                        viewLoansButton);
                     return;
                 }
+
+                viewLoansButton.prop("disabled", true);
 
                 $.ajax({
                     url: "http://127.0.0.1:8000/api/loans",
@@ -269,15 +281,15 @@
                     },
                     success: function(data) {
                         let tableData = `<table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
 
                         if (!data.loans || data.loans.length === 0) {
                             tableData +=
@@ -285,32 +297,38 @@
                         } else {
                             data.loans.forEach(e => {
                                 tableData += `
-                                    <tr>
-                                        <td>${e.user.name}</td>
-                                        <td>${e.user.email}</td>
-                                        <td>${e.amount}</td>
-                                        <td>${e.status}</td>
-                                    </tr>`;
+                            <tr>
+                                <td>${e.user.name}</td>
+                                <td>${e.user.email}</td>
+                                <td>${e.amount}</td>
+                                <td>${e.status}</td>
+                            </tr>`;
                             });
                         }
 
                         tableData += `</tbody></table>`;
                         $("#loanTableContainer").html(tableData);
                         $("#loanModal").modal("show");
+                        showNotification("Loans loaded successfully.", "success",
+                            viewLoansButton);
                     },
                     error: function(xhr) {
-                        showNotification("Error fetching loan applications.", "error");
+                        showNotification("Error fetching loan applications.", "error",
+                            viewLoansButton);
                     }
                 });
             });
 
             $("#logout").click(function() {
                 var authToken = localStorage.getItem("auth_token");
+                var logoutButton = $("#logout");
 
                 if (!authToken) {
-                    showNotification("You are not logged in. Please log in first.", "error");
+                    showNotification("You are not logged in. Please log in first.", "error", logoutButton);
                     return;
                 }
+
+                logoutButton.prop("disabled", true);
 
                 $.ajax({
                     url: "http://127.0.0.1:8000/api/logout",
@@ -324,20 +342,14 @@
                         'Content-Type': 'application/json'
                     },
                     success: function(response) {
-                        showNotification(response.message, "success");
+                        showNotification(response.message, "success", logoutButton);
                         localStorage.removeItem("auth_token");
                         setTimeout(() => {
                             window.location.href = "/";
                         }, 1000);
                     },
                     error: function(xhr) {
-                        let message = "Something went wrong!";
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            message = xhr.responseJSON.message;
-                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
-                            message = Object.values(xhr.responseJSON.error).join("<br>");
-                        }
-                        showNotification(message, "error");
+                        showNotification("Something went wrong!", "error", logoutButton);
                     }
                 });
             });

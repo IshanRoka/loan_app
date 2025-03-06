@@ -194,26 +194,28 @@
     </div>
 
     <script>
-        function showNotification(message, type = 'success') {
+        function showNotification(message, type = 'success', callback) {
             const notificationContainer = $('#notification-container');
             const notification = $(`<div class="notification ${type}">
-                <p>${message}</p>
-                <span class="close-btn">&times;</span>
-            </div>`);
+        <p>${message}</p>
+        <span class="close-btn">&times;</span>
+    </div>`);
 
             notificationContainer.append(notification);
 
             notification.find('.close-btn').on('click', function() {
                 notification.fadeOut(300, function() {
                     notification.remove();
+                    if (callback) callback();
                 });
             });
 
             setTimeout(function() {
                 notification.fadeOut(300, function() {
                     notification.remove();
+                    if (callback) callback();
                 });
-            }, 4000);
+            }, 1000);
         }
 
         $(document).ready(function() {
@@ -222,6 +224,9 @@
 
                 var email = $("#email").val();
                 var password = $("#password").val();
+                var submitButton = $("button[type='submit']");
+
+                submitButton.prop("disabled", true);
 
                 $.ajax({
                     url: "http://127.0.0.1:8000/api/login",
@@ -232,11 +237,13 @@
                         password: password
                     }),
                     success: function(response) {
-
                         if (response.token) {
                             localStorage.setItem("auth_token", response.token);
                             localStorage.setItem("user_id", response.user_id);
-                            showNotification("Login successful! Redirecting...", "success");
+                            showNotification("Login successful! Redirecting...", "success",
+                                function() {
+                                    submitButton.prop("disabled", false);
+                                });
 
                             if (response.user_id === 1) {
                                 setTimeout(function() {
@@ -245,18 +252,21 @@
                                 }, 2000);
                             } else {
                                 setTimeout(function() {
-                                    window.location.href =
-                                        "http://127.0.0.1:8000/form";
+                                    window.location.href = "http://127.0.0.1:8000/form";
                                 }, 2000);
                             }
                         } else {
-                            showNotification(response.message || "Invalid credentials",
-                                "error");
+                            showNotification(response.message || "Invalid credentials", "error",
+                                function() {
+                                    submitButton.prop("disabled", false);
+                                });
                         }
                     },
                     error: function(xhr) {
-                        let message = "Login failed!";
-                        showNotification(message, "error");
+                        let message = "Invalid credentials!";
+                        showNotification(message, "error", function() {
+                            submitButton.prop("disabled", false);
+                        });
                     }
                 });
             });
