@@ -66,7 +66,7 @@ class LoanController extends Controller
         return response()->json(['type' => $type, 'message' => $message], 201);
     }
 
-    
+
     public function index()
     {
         try {

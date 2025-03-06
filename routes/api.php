@@ -5,8 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoanController;
 
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-
 Route::post('/login', [AuthController::class, 'loginUser']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/loan/apply', [LoanController::class, 'apply']);

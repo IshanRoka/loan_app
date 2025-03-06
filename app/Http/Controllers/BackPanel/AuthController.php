@@ -28,7 +28,7 @@ class AuthController extends Controller
                 $user = Auth::user();
                 return response()->json([
                     'type' => 'success',
-                    'message' => 'User logged in successfully',
+                    'message' => 'Login successful! Redirecting...',
                     'user_id' => $user->id,
                     'token' => $user->createToken('auth_token')->plainTextToken,
                     'token_type' => 'bearer',
@@ -42,12 +42,12 @@ class AuthController extends Controller
         } catch (QueryException $e) {
             return response()->json([
                 'type' => 'error',
-                'message' => 'Database error: ' . $e->getMessage(),
+                'message' => 'Invalid email or password',
             ], 500);
         } catch (Exception $e) {
             return response()->json([
                 'type' => 'error',
-                'message' => $e->getMessage(),
+                'message' => 'Invalid email or password',
             ], 500);
         }
     }

@@ -273,7 +273,7 @@
     </div>
 
     <script>
-        function showNotification(message, type = 'success') {
+        function showNotification(message, type = 'success', callback = null) {
             const notificationContainer = document.getElementById('notification-container');
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
@@ -282,14 +282,19 @@
 
             notification.querySelector('.close-btn').addEventListener('click', function() {
                 notification.remove();
+                if (callback) callback();
             });
 
             setTimeout(function() {
                 notification.remove();
-            }, 4000);
+                if (callback) callback();
+            }, 1000);
         }
 
+
         function updateLoanStatus(loanId, status) {
+            const submitButton = document.querySelector('#updateLoanStatusButton');
+
             fetch(`/api/loan/${loanId}`, {
                     method: 'PATCH',
                     headers: {
@@ -303,14 +308,22 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message === 'Loan status updated successfully') {
-                        showNotification(data.message, "success");
+                        showNotification(data.message, "success", function() {
+                            submitButton.disabled = false;
+                        });
                     } else {
-                        showNotification(data.message, "error");
+                        showNotification(data.message, "error", function() {
+                            submitButton.disabled = false;
+                        });
                     }
                 })
                 .catch(error => {
-                    showNotification('An error occurred while updating the loan status', 'error');
+                    showNotification('An error occurred while updating the loan status', 'error', function() {
+                        submitButton.disabled = false; // Re-enable button after notification
+                    });
                 });
+
+            submitButton.disabled = true; // Disable button while request is being processed
         }
 
         $("#logout").click(function() {

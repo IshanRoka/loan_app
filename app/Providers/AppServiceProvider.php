@@ -33,12 +33,6 @@ class AppServiceProvider extends ServiceProvider
 
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
 
-        View::composer(['*'], function ($view) {
-            $view->with('userProfile', Auth::user());
-            $view->with('siteSetting', SiteSetting::find(1));
-            $view->with('aboutus', AboutUs::find(1));
-        });
-
         // Use Bootstrap for Pagination
         \Illuminate\Pagination\Paginator::useBootstrap();
     }

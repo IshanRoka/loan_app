@@ -19,11 +19,7 @@ class RedirectIfAuthenticatedUser
     {
         try {
             $post = $request->all();
-
-
-            // dd($post);
             $userId = Auth()->user()->id;
-            // dd($userId);
             if (!$userId)
                 throw new Exception('User not found.', 1);
         } catch (Exception) {

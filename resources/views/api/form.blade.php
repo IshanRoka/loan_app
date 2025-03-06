@@ -7,6 +7,7 @@
     <title>Apply for Loan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     @include('api.main')
+
     <style>
         body {
             height: 100vh;
@@ -150,19 +151,23 @@
             color: white;
         }
     </style>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
     <div id="notification-container"></div>
+
     <div class="container">
         <form id="loanForm">
             <h3>Apply for Loan</h3>
             <input type="number" name="amount" id="amount" required placeholder="Enter Loan Amount">
             <button type="submit" class="apply">Apply</button>
         </form>
+
         <hr>
+
         <div class="btns">
             <button id="viewLoans">View Loan Application</button>
             <hr>
@@ -189,7 +194,7 @@
     <script>
         function showNotification(message, type = 'success') {
             const notificationContainer = $('#notification-container');
-            const notification = $(`
+            const notification = $(`    
                 <div class="notification ${type}">
                     <p>${message}</p>
                     <span class="close-btn">&times;</span>
@@ -205,7 +210,7 @@
                 notification.fadeOut(300, function() {
                     notification.remove();
                 });
-            }, 4000);
+            }, 1000);
         }
 
         $(document).ready(function() {
@@ -242,14 +247,8 @@
                         showNotification(response.message, "success");
                         $("#loanForm")[0].reset();
                     },
-                    error: function(xhr) {
-                        let message = "Something went wrong!";
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            message = xhr.responseJSON.message;
-                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
-                            message = Object.values(xhr.responseJSON.error).join("<br>");
-                        }
-                        showNotification(message, "error");
+                    error: function() {
+                        showNotification("Something went wrong!", "error");
                     }
                 });
             });
@@ -298,7 +297,7 @@
                         $("#loanTableContainer").html(tableData);
                         $("#loanModal").modal("show");
                     },
-                    error: function(xhr) {
+                    error: function() {
                         showNotification("Error fetching loan applications.", "error");
                     }
                 });
@@ -328,20 +327,14 @@
                         localStorage.removeItem("auth_token");
                         setTimeout(() => {
                             window.location.href = "/";
-                        }, 1000);
+                        }, 500);
                     },
                     error: function(xhr) {
                         let message = "Something went wrong!";
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            message = xhr.responseJSON.message;
-                        } else if (xhr.responseJSON && xhr.responseJSON.error) {
-                            message = Object.values(xhr.responseJSON.error).join("<br>");
-                        }
                         showNotification(message, "error");
                     }
                 });
             });
-
         });
     </script>
 </body>
