@@ -240,7 +240,7 @@
                         if (response.token) {
                             localStorage.setItem("auth_token", response.token);
                             localStorage.setItem("user_id", response.user_id);
-                            showNotification("Login successful! Redirecting...", "success",
+                            showNotification(response.message, "success",
                                 function() {
                                     submitButton.prop("disabled", false);
                                 });
@@ -262,11 +262,9 @@
                                 });
                         }
                     },
-                    error: function(xhr) {
-                        let message = "Invalid credentials!";
-                        showNotification(message, "error", function() {
-                            submitButton.prop("disabled", false);
-                        });
+                    error: function(response) {
+                        let message = "Invalid email or password!";
+                        showNotification(message, "error");
                     }
                 });
             });

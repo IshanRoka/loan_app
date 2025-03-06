@@ -21,12 +21,12 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
-                'name' => 3,
+                'name' => 'Ishan Roka',
                 'email' => 'ishan@gmail.com',
                 'password' => Hash::make('password1'),
             ],
             [
-                'name' => 3,
+                'name' => 'Ishan Roka2',
                 'email' => 'ishan2@gmail.com',
                 'password' => Hash::make('password2'),
             ],
