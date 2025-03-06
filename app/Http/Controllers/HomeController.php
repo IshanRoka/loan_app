@@ -4,13 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\BackPanel\AboutUs;
-use App\Models\BackPanel\Event;
-use App\Models\BackPanel\History;
-use App\Models\BackPanel\Program;
-use App\Models\BackPanel\SiteSetting;
-use App\Models\BackPanel\MessageFrom;
-use App\Models\BackPanel\Notice;
 use App\Models\Loan;
 use Exception;
 
