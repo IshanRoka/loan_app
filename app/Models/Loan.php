@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Common;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Str;
 
 
 class Loan extends Model
