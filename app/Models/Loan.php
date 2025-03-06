@@ -48,69 +48,22 @@ class Loan extends Model
     }
 
 
-    // public static function myInfo($post)
-    // {
-    //     try {
-    //         $get = $post;
-
-
-    //         foreach ($get['columns'] as $key => $value) {
-    //             $get['columns'][$key]['search']['value'] = trim(strtolower(htmlspecialchars($value['search']['value'], ENT_QUOTES)));
-    //         }
-
-    //         $cond = '';
-
-    //         if ($get['columns'][1]['search']['value'])
-    //             $cond .= " and lower(name) like '%" . $get['columns'][1]['search']['value'] . "%'";
-
-    //         $limit = 15;
-    //         $offset = 0;
-    //         if (!empty($get["length"]) && $get["length"]) {
-    //             $limit = $get['length'];
-    //             $offset = $get["start"];
-    //         }
-
-    //         $query = Loan::selectRaw("(SELECT count(*) FROM loans WHERE {$cond}) AS totalrecs, id,amount,status,user")
-    //             ->whereRaw($cond);
-
-    //         $orderby = $query->orderBy("id", "ASC");
-
-
-    //         if ($limit > -1) {
-    //             $result = $query->orderByRaw($orderby)->offset($offset)->limit($limit)->get();
-    //         } else {
-    //             $result = $query->orderByRaw($orderby)->get();
-    //         }
-    //         if ($result) {
-    //             $ndata = $result;
-    //             $ndata['totalrecs'] = @$result[0]->totalrecs ? $result[0]->totalrecs : 0;
-    //             $ndata['totalfilteredrecs'] = @$result[0]->totalrecs ? $result[0]->totalrecs : 0;
-    //         } else {
-    //             $ndata = array();
-    //         }
-
-    //         return $ndata;
-    //     } catch (Exception $e) {
-    //         throw $e;
-    //     }
-    // }
-
     public static function updateApplication($post, $id)
-    { 
-            try {
-                $dataArray = [
-                    'status' => $post['status'],
-                ];
+    {
+        try {
+            $dataArray = [
+                'status' => $post['status'],
+            ];
 
 
-                $dataArray['updated_at'] = Carbon::now();
-                if (!Loan::where('id', $id)->update($dataArray)) {
-                    throw new Exception("Couldn't update Status", 1);
-                }
-
-                return true;
-            } catch (Exception $e) {
-                throw $e;
+            $dataArray['updated_at'] = Carbon::now();
+            if (!Loan::where('id', $id)->update($dataArray)) {
+                throw new Exception("Couldn't update Status", 1);
             }
+
+            return true;
+        } catch (Exception $e) {
+            throw $e;
         }
+    }
 }

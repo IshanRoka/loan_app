@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\frontpanel\HomeController as FrontHomeController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +25,6 @@ Route::get('/clear-cache', function () {
 */
 
 
-Route::get('/', [FrontHomeController::class, 'login'])->name('login');
-Route::get('/form', [FrontHomeController::class, 'index'])->name('home');
-Route::get('/dashboard', [FrontHomeController::class, 'dashboard'])->name('dashboard');
+Route::get('/', [HomeController::class, 'login'])->name('login');
+Route::get('/form', [HomeController::class, 'index'])->name('home');
+Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');

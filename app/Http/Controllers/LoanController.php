@@ -30,10 +30,10 @@ class LoanController extends Controller
             ];
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
+            $data['message'] = 'Please Contact Admin';
         } catch (Exception $e) {
             $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
+            $data['message'] = 'Please Contact Admin';
         }
         return response()->json($data);
     }
@@ -53,15 +53,15 @@ class LoanController extends Controller
             DB::commit();
         } catch (ValidationException $e) {
             $type = 'error';
-            $message = $e->getMessage();
+            $message = 'Please Contact Admin';
         } catch (QueryException $e) {
             DB::rollBack();
             $type = 'error';
-            $message = $this->queryMessage;
+            $message = 'Please Contact Admin';
         } catch (Exception $e) {
             DB::rollBack();
             $type = 'error';
-            $message = $e->getMessage();
+            $message = 'Please Contact Admin';
         }
         return response()->json(['type' => $type, 'message' => $message], 201);
     }
@@ -81,10 +81,10 @@ class LoanController extends Controller
             }
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            $data['message'] = 'Database error occurred: ' . $e->getMessage();
+            $data['message'] = 'Please Contact Admin';
         } catch (Exception $e) {
             $data['type'] = 'error';
-            $data['message'] = 'An error occurred: ' . $e->getMessage();
+            $data['message'] = 'Please Contact Admin';
         }
         return response()->json($data, 200);
     }
@@ -107,15 +107,15 @@ class LoanController extends Controller
             DB::commit();
         } catch (ValidationException $e) {
             $type = 'error';
-            $message = $e->getMessage();
+            $message = 'Please Contact Admin';
         } catch (QueryException $e) {
             DB::rollBack();
             $type = 'error';
-            $message = $this->queryMessage;
+            $message = 'Please Contact Admin';
         } catch (Exception $e) {
             DB::rollBack();
             $type = 'error';
-            $message = $e->getMessage();
+            $message = 'Please Contact Admin';
         }
         return response()->json(['type' => $type, 'message' => $message], 200);
     }

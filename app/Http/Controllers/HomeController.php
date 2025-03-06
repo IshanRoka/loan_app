@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\frontpanel;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -35,7 +35,7 @@ class HomeController extends Controller
         try {
             $status = true;
             $message = 'Loan applications retrieved successfully!';
-            $allLoans = Loan::with('user')->paginate(7);
+            $allLoans = Loan::with('user')->paginate(6);
             $data = [
                 'status' =>  $status,
                 'message' => $message,
@@ -43,10 +43,10 @@ class HomeController extends Controller
             ];
         } catch (QueryException $e) {
             $data['type'] = 'error';
-            $data['message'] = $this->queryMessage;
+            $data['message'] = 'Please Contact Admin';
         } catch (Exception $e) {
             $data['type'] = 'error';
-            $data['message'] = $e->getMessage();
+            $data['message'] = 'Please Contact Admin';
         }
         return view('api.dashbaord', $data);
     }
