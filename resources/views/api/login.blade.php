@@ -264,7 +264,10 @@
                     },
                     error: function(response) {
                         let message = "Invalid email or password!";
-                        showNotification(message, "error");
+                        showNotification(message, "error",
+                            function() {
+                                submitButton.prop("disabled", false);
+                            });
                     }
                 });
             });
